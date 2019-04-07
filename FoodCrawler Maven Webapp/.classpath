@@ -28,5 +28,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="G:/cpdetector_1.0.10_binary/cpdetector_1.0.10.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

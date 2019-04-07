@@ -1,7 +1,71 @@
 <!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/dtd/web-app_2_3.dtd" >
+ "-//Sun Microsystems, Inc.//DTD Web Application 3.0//EN"
+ "http://java.sun.com/dtd/web-app_3_0.dtd" >
 
-<web-app>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance 
+http://www.springmodules.org/schema/cache/springmodules-cache.xsd 
+http://www.springmodules.org/schema/cache/springmodules-ehcache.xsd" 
+xmlns="http://java.sun.com/xml/ns/javaee" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <display-name>Archetype Created Web Application</display-name>
+  <!-- 解决工程编码过滤器 -->
+  <filter>
+  	<filter-name>characterEncodingFilter</filter-name>
+  	<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+  	<init-param>
+  		<param-name>encoding</param-name>
+  		<param-value>UTF-8</param-value>
+  	</init-param>
+  </filter>
+  <filter-mapping>
+  	<filter-name>characterEncodingFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <!-- 配置文件位置 -->
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>classpath:spring-config.xml,classpath:mybatis-spring.xml</param-value><!-- classpath*:是扫描包括jar包的classes文件夹下文件 -->
+  </context-param>
+  <!-- spring上下文监听器 -->
+  <listener>
+  	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+  <!-- springMVC配置 -->
+  <!-- spring 服务分发 -->
+  <servlet>
+  	<servlet-name>springDispatcherServlet</servlet-name>
+  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  	<init-param>
+  		<param-name>contextConfigLocation</param-name>
+  		<param-value>classpath:spring-mvc.xml</param-value>
+  	</init-param>
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>springDispatcherServlet</servlet-name>
+  	<url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  
+  <welcome-file-list>
+  	<welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+  <!-- log4j配置 -->
+  <!-- 设置根目录系统变量 -->
+  <context-param>
+  	<param-name>webAppRootKey</param-name>
+  	<param-value>webapp.root</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>log4jConfigLocation</param-name>
+  	<param-value>classpath:log4j.properties</param-value>
+  </context-param>
+  <!-- 开一条watchdog线程每60秒扫描一下配置文件的变化;这样便于日志存放位置的改变 -->
+  <context-param>
+  	<param-name>log4jRefreshInterval</param-name>
+  	<param-value>3000</param-value>
+  </context-param>
+  <listener>
+  	<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+  </listener>
 </web-app>
