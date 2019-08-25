@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.Consts;
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -83,13 +85,17 @@ public class SendRequestUtil {
 				//请求成功
 //				String charset = CommonUtil.getStreamCharset(httpEntity.getContent());
 //				logger.debug("-----------字符集：" + charset);
-				String entityStr = EntityUtils.toString(httpEntity, charSet);//获取网页编码的问题有待解决
+				String contCharSet = getEntityContEncoding(httpEntity);
+				logger.debug("-----------字符集：" + contCharSet);
+				String entityStr = EntityUtils.toString(httpEntity, CommonUtil.isStrBlank(contCharSet) ? charSet : contCharSet);//获取网页编码的问题有待解决
 				logger.debug("doGet:请求成功，响应体内容：" + entityStr);
 				retObj.setRetCode("0");
 				HashMap retMap = new HashMap();
+				retMap.put("resStr", entityStr);
 				retObj.setRetMap(retMap);
 			} else {
-				logger.debug("doGet:请求失败，状态码：" + statusCode);
+				logger.error("doGet:请求失败，返回报文：" + EntityUtils.toString(response.getEntity()));
+				logger.error("doGet:请求失败，状态码：" + statusCode);
 				retObj.setRetCode("1");
 				retObj.setRetMsg("状态码：" + statusCode);
 			}
@@ -116,7 +122,7 @@ public class SendRequestUtil {
 	 * @param paramMap 表单参数
 	 * @throws IOException 
 	 */
-	@SuppressWarnings({ "deprecation", "rawtypes", "unchecked" })
+	@SuppressWarnings({  "rawtypes", "unchecked" })
 	public static RetObj doPost(String url, Map<String, String> headers, Map<String, String> paramMap) throws IOException {
 		RetObj retObj = new RetObj();
 		HttpPost httpPost = new HttpPost(url);
@@ -149,13 +155,17 @@ public class SendRequestUtil {
 				//请求成功
 //				String charset = CommonUtil.getStreamCharset(httpEntity.getContent());
 //				logger.debug("-----------字符集：" + charset);
-				String entityStr = EntityUtils.toString(httpEntity, charSet);//获取网页编码的问题有待解决
+				String contCharSet = getEntityContEncoding(httpEntity);
+				logger.debug("-----------字符集：" + contCharSet);
+				String entityStr = EntityUtils.toString(httpEntity, CommonUtil.isStrBlank(contCharSet) ? charSet : contCharSet);//获取网页编码的问题有待解决
 				logger.debug("doPost:请求成功，响应体内容：" + entityStr);
 				retObj.setRetCode("0");
 				HashMap retMap = new HashMap();
+				retMap.put("resStr", entityStr);
 				retObj.setRetMap(retMap);
 			} else {
-				logger.debug("doPost:请求失败，状态码：" + statusCode);
+				logger.error("doPost:请求失败，返回报文：" + EntityUtils.toString(response.getEntity()));
+				logger.error("doPost:请求失败，状态码：" + statusCode);
 				retObj.setRetCode("1");
 				retObj.setRetMsg("状态码：" + statusCode);
 			}
@@ -173,6 +183,23 @@ public class SendRequestUtil {
 		return retObj;
 	}
 
+	/**
+	 * 从响应头中获取响应体编码
+	 * @param he
+	 * @return
+	 */
+	private static String getEntityContEncoding(HttpEntity he) {
+		Header header = he.getContentType();
+		HeaderElement[] hes = header.getElements();
+		for (HeaderElement e : hes) {
+			for (NameValuePair p : e.getParameters()) {
+				if ("charset".equals(p.getName())) {
+					return p.getValue();
+				}
+			}
+		}
+		return null;
+	}
 	/**
 	 * @return the charset
 	 */

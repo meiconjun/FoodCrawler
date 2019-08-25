@@ -38,7 +38,7 @@ public class Test1 {
 //		String s = EntityUtils.toString(new UrlEncodedFormEntity(params, Consts.UTF_8));
 //		System.out.println(s);
 		SendRequestUtil.setCharset("gb2312");
-		RetObj retObj = SendRequestUtil.doPost("http://www.w3school.com.cn/b.asp", null, null);
+		RetObj retObj = SendRequestUtil.doPost("https://www.w3school.com.cn/b.asp", null, null);
 	}
 
 }
