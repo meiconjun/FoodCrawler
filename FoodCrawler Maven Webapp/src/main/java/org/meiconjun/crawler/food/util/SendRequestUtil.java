@@ -91,7 +91,7 @@ public class SendRequestUtil {
 				logger.debug("doGet:请求成功，响应体内容：" + entityStr);
 				retObj.setRetCode("0");
 				HashMap retMap = new HashMap();
-				retMap.put("resStr", entityStr);
+				retMap.put("retStr", entityStr);
 				retObj.setRetMap(retMap);
 			} else {
 				logger.error("doGet:请求失败，返回报文：" + EntityUtils.toString(response.getEntity()));
@@ -161,7 +161,7 @@ public class SendRequestUtil {
 				logger.debug("doPost:请求成功，响应体内容：" + entityStr);
 				retObj.setRetCode("0");
 				HashMap retMap = new HashMap();
-				retMap.put("resStr", entityStr);
+				retMap.put("retStr", entityStr);
 				retObj.setRetMap(retMap);
 			} else {
 				logger.error("doPost:请求失败，返回报文：" + EntityUtils.toString(response.getEntity()));

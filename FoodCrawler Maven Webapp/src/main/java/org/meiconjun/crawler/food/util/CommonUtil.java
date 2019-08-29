@@ -4,11 +4,17 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import info.monitorenter.cpdetector.io.ASCIIDetector;
 import info.monitorenter.cpdetector.io.ByteOrderMarkDetector;
@@ -24,6 +30,37 @@ import info.monitorenter.cpdetector.io.UnicodeDetector;
  * @time 2019年4月7日上午1:02:03
  */
 public class CommonUtil {
+	/**
+	 * Json解析器
+	 */
+	private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	
+	/**
+	 * 将Json字符串解析成对象
+	 * @return
+	 */
+	public static Object jsonToObj(String json, Type t) {
+		return gson.fromJson(json, t);
+	}
+	
+	/**
+	 * 将对象转为Json字符串
+	 * @param obj
+	 * @return
+	 */
+	public static String objToJson(Object obj) {
+		return gson.toJson(obj);
+	}
+	/**
+	 * 格式化Json字符串
+	 * @param str
+	 * @return
+	 */
+	public static String formatJson(String str) {
+		JsonParser jp = new JsonParser();
+		JsonObject jo = jp.parse(str).getAsJsonObject();
+		return gson.toJson(jo);
+	}
 	/**
 	 * 判断字符串是否为空
 	 * @param str
